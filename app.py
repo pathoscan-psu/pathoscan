@@ -13,7 +13,7 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 # --- Streamlit setup ---
 st.set_page_config(page_title="PathoScan", page_icon="🩹", layout="centered")
-st.title("🩹 HealLens: AI Wound Infection Detector")
+st.title("🩹 PathoScan: AI Wound Infection Detector")
 st.caption("AI-based wound analysis for educational and demo purposes.")
 st.warning("⚠️ This app provides AI-generated insights and is **not** a substitute for professional medical advice.")
 
