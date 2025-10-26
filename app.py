@@ -15,37 +15,64 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 # --- Streamlit setup ---
 st.set_page_config(page_title="PathoScan - HealLens", page_icon="🩹", layout="centered")
 
-# --- Custom CSS for styling ---
+# --- Clean readable CSS ---
 st.markdown("""
     <style>
-    body {background-color: #f5f7fa;}
+    /* Overall app container */
     .stApp {
-        background: linear-gradient(180deg, #fefefe 0%, #f1f5f9 100%);
-        border-radius: 20px;
-        padding: 20px;
+        background: linear-gradient(180deg, #fdfdfd 0%, #f4f7fb 100%);
+        color: #1c1e21;
+        font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
     }
+
+    /* Headings */
     h1, h2, h3 {
+        color: #1e293b !important;
+        font-weight: 700;
         text-align: center;
-        color: #2b2d42;
-        font-family: 'Helvetica Neue', sans-serif;
     }
+
+    /* Subheaders and captions */
+    .stCaption, .stMarkdown, p, label, span {
+        color: #1c1e21 !important;
+        font-size: 15px !important;
+    }
+
+    /* Image box */
     .uploadedImage {
-        border: 2px solid #d0d7de;
-        border-radius: 15px;
-        padding: 10px;
+        border: 2px solid #d6dee6;
+        border-radius: 10px;
         background-color: #ffffff;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        padding: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Spinner text */
+    div[data-testid="stSpinner"] p {
+        font-size: 17px;
+        font-weight: 600;
+        color: #334155;
+    }
+
+    /* Divider line */
+    hr {border: 0; border-top: 1px solid #cbd5e1; margin: 1.5em 0;}
+
+    /* Success banner */
+    .stSuccess {
+        background-color: #ecfdf5 !important;
+        color: #065f46 !important;
+        border-left: 4px solid #10b981 !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # --- Header ---
 st.title("🩹 PathoScan by HealLens")
-st.caption("Smart AI-powered wound infection detector for educational and demo use only.")
+st.caption("Smart AI-powered wound infection detector for educational and demo purposes.")
 st.warning("⚠️ This tool provides AI-generated insights — **not** a medical diagnosis. Always consult a professional.")
 
 # --- User Info Form ---
-with st.expander("👤 Enter your basic details (optional, for better context only)"):
+with st.expander("👤 Enter your basic details (optional)"):
     col1, col2 = st.columns(2)
     with col1:
         age = st.number_input("Age", min_value=1, max_value=120, value=25, step=1)
@@ -53,14 +80,14 @@ with st.expander("👤 Enter your basic details (optional, for better context on
     with col2:
         weight = st.number_input("Weight (kg)", min_value=10, max_value=300, value=65)
 
-st.markdown("---")
+st.markdown("<hr>", unsafe_allow_html=True)
 
 # --- File uploader ---
 st.header("📤 Upload a wound image for analysis")
 uploaded = st.file_uploader("Choose an image (JPG, JPEG, PNG)", type=["jpg", "jpeg", "png"])
 
 def analyze_image_with_gemini(image_bytes: bytes):
-    """Sends the wound image to Gemini and returns structured output."""
+    """Send the wound image to Gemini and return the analysis."""
     try:
         model = genai.GenerativeModel("gemini-2.5-flash")
 
@@ -121,10 +148,10 @@ if uploaded:
     st.text(result)
 
     # Display user info summary
-    st.markdown("---")
-    st.markdown(f"**👤 Submitted Info (not used by AI)**\n\n- Age: {age}\n- Height: {height} cm\n- Weight: {weight} kg")
+    st.markdown("<hr>", unsafe_allow_html=True)
+    st.markdown(f"**👤 Submitted Info (not used by AI)**  \n- Age: {age}  \n- Height: {height} cm  \n- Weight: {weight} kg")
 
-    # Footer note
+    # Footer
     st.info("This analysis is AI-generated for educational purposes only. Consult a licensed clinician for medical advice.")
 else:
     st.info("📷 Please upload an image above to begin the analysis.")
