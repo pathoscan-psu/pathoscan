@@ -15,61 +15,92 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 # --- Streamlit setup ---
 st.set_page_config(page_title="PathoScan - HealLens", page_icon="🩹", layout="centered")
 
-# --- Clean readable CSS ---
+# --- Modern dark CSS ---
 st.markdown("""
     <style>
-    /* Overall app container */
+    /* Overall background */
     .stApp {
-        background: linear-gradient(180deg, #fdfdfd 0%, #f4f7fb 100%);
-        color: #1c1e21;
-        font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+        background: radial-gradient(circle at top left, #111827, #0f172a, #1e293b);
+        color: #f9fafb !important;
+        font-family: 'Poppins', 'Segoe UI', sans-serif;
     }
 
     /* Headings */
     h1, h2, h3 {
-        color: #1e293b !important;
-        font-weight: 700;
+        color: #f8fafc !important;
         text-align: center;
+        font-weight: 700;
+        letter-spacing: 0.3px;
     }
 
-    /* Subheaders and captions */
-    .stCaption, .stMarkdown, p, label, span {
-        color: #1c1e21 !important;
+    /* Paragraphs and labels */
+    p, label, span, .stMarkdown, .stCaption {
+        color: #e2e8f0 !important;
         font-size: 15px !important;
     }
 
-    /* Image box */
-    .uploadedImage {
-        border: 2px solid #d6dee6;
+    /* Logo banner */
+    .banner {
+        background: linear-gradient(90deg, #0ea5e9, #6366f1);
+        padding: 12px 0;
+        text-align: center;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+    .banner img {
+        height: 55px;
         border-radius: 10px;
-        background-color: #ffffff;
+    }
+
+    /* Upload area */
+    .uploadedImage {
+        border: 2px solid #334155;
+        border-radius: 12px;
+        background-color: #1e293b;
         padding: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 10px rgba(255,255,255,0.05);
     }
 
     /* Spinner text */
     div[data-testid="stSpinner"] p {
         font-size: 17px;
         font-weight: 600;
-        color: #334155;
+        color: #e2e8f0;
     }
 
-    /* Divider line */
-    hr {border: 0; border-top: 1px solid #cbd5e1; margin: 1.5em 0;}
+    /* Divider */
+    hr {border: 0; border-top: 1px solid #334155; margin: 1.5em 0;}
 
-    /* Success banner */
+    /* Success */
     .stSuccess {
-        background-color: #ecfdf5 !important;
-        color: #065f46 !important;
-        border-left: 4px solid #10b981 !important;
+        background-color: #1e3a8a !important;
+        color: #e0f2fe !important;
+        border-left: 5px solid #38bdf8 !important;
+    }
+
+    /* Input boxes */
+    input, textarea {
+        background-color: #111827 !important;
+        color: #f9fafb !important;
+        border: 1px solid #334155 !important;
+        border-radius: 6px !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
+# --- Top banner for logo ---
+st.markdown("""
+    <div class="banner">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="Your Logo Here">
+    </div>
+""", unsafe_allow_html=True)
+# 👆 Replace the image link above with your logo URL
+
 # --- Header ---
 st.title("🩹 PathoScan by HealLens")
-st.caption("Smart AI-powered wound infection detector for educational and demo purposes.")
-st.warning("⚠️ This tool provides AI-generated insights — **not** a medical diagnosis. Always consult a professional.")
+st.caption("AI-powered wound infection detector for educational and demo use only.")
+st.warning("⚠️ This tool provides AI-generated insights — **not** a medical diagnosis.")
 
 # --- User Info Form ---
 with st.expander("👤 Enter your basic details (optional)"):
@@ -106,12 +137,7 @@ def analyze_image_with_gemini(image_bytes: bytes):
         response = model.generate_content(
             [
                 prompt,
-                {
-                    "inline_data": {
-                        "mime_type": "image/jpeg",
-                        "data": image_bytes
-                    }
-                }
+                {"inline_data": {"mime_type": "image/jpeg", "data": image_bytes}}
             ],
             request_options={"timeout": 30},
         )
@@ -151,7 +177,6 @@ if uploaded:
     st.markdown("<hr>", unsafe_allow_html=True)
     st.markdown(f"**👤 Submitted Info (not used by AI)**  \n- Age: {age}  \n- Height: {height} cm  \n- Weight: {weight} kg")
 
-    # Footer
-    st.info("This analysis is AI-generated for educational purposes only. Consult a licensed clinician for medical advice.")
+    st.info("This analysis is AI-generated for educational purposes only.")
 else:
     st.info("📷 Please upload an image above to begin the analysis.")
